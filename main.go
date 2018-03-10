@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	directory = flag.String("directory", "", "Optional: destination directory (if unspecified current directory is used).")
-	force = flag.Bool("force", false, "force removal of terraform binary if found.")
+	directory = flag.String("directory", "", "Optional: destination directory (by default the current directory is used).")
+	force     = flag.Bool("force", false, "Optional: force removal of terraform binary if found (default is false).")
 	tfVersion = flag.String("tf-version", "", "terraform version to use.")
 )
 
@@ -116,6 +116,10 @@ func unzip(src string, dest string) ([]string, error) {
 }
 
 func main() {
+
+	log.SetFlags(0)
+	log.SetPrefix("terrapin: ")
+
 	flag.Parse()
 	if flag.NArg() != 0 {
 		flag.Usage()
@@ -132,7 +136,7 @@ func main() {
 	}
 
 	// verify the directory exists
-	 _, err := os.Stat(*directory)
+	_, err := os.Stat(*directory)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -156,8 +160,8 @@ func main() {
 
 	// if the file does not exist, or if the -force flag was set, download terraform
 	_, err = os.Stat(tfPath)
-	if (err != nil || *force) {
-		if (os.IsNotExist(err) || *force) {
+	if err != nil || *force {
+		if os.IsNotExist(err) || *force {
 			err := downloadTerraform(*tfVersion, *directory)
 			if err != nil {
 				log.Fatalln(err)
@@ -172,7 +176,7 @@ func main() {
 	}
 	versionString := "Terraform v" + *tfVersion
 	if !strings.Contains(string(out), versionString) {
-		 log.Fatalf("wrong terraform version found at %s, pass -force to remove it", tfPath)
+		log.Fatalf("wrong terraform version found at %s, pass the -force flag to remove it", tfPath)
 	}
 
 	log.Println("terraform", *tfVersion, "is available at", tfPath)
