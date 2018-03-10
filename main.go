@@ -17,7 +17,7 @@ import (
 
 var (
 	directory = flag.String("directory", "", "Optional: destination directory (by default the current directory is used).")
-	force     = flag.Bool("force", false, "Optional: force removal of terraform binary if found (default is false).")
+	force     = flag.Bool("force", false, "Optional: overwrite terraform binary if found (default is false).")
 	tfVersion = flag.String("tf-version", "", "terraform version to use.")
 )
 

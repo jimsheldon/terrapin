@@ -11,7 +11,7 @@ $ terrapin
   -directory string
         Optional: destination directory (by default the current directory is used).
   -force
-        Optional: force removal of terraform binary if found (default is false).
+        Optional: overwrite terraform binary if found (default is false).
   -tf-version string
         terraform version to use.
 ```
