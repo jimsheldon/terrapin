@@ -176,7 +176,7 @@ func main() {
 	}
 	versionString := "Terraform v" + *tfVersion
 	if !strings.Contains(string(out), versionString) {
-		log.Fatalf("wrong terraform version found at %s, pass the -force flag to remove it", tfPath)
+		log.Fatalf("wrong terraform version found at %s, pass the -force flag to overwrite it", tfPath)
 	}
 
 	log.Println("terraform", *tfVersion, "is available at", tfPath)

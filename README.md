@@ -59,7 +59,7 @@ terrapin: configuration:
 terrapin:     -directory     = /Users/jsheldon/bin
 terrapin:     -force         = false
 terrapin:     -tf-version    = 0.11.2
-terrapin: wrong terraform version found at /Users/jsheldon/bin/terraform, pass the -force flag to remove it
+terrapin: wrong terraform version found at /Users/jsheldon/bin/terraform, pass the -force flag to overwrite it
 ```
 
 Pass the `-force` flag to overwrite the terraform binary:
