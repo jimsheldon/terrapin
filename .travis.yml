@@ -1,0 +1,15 @@
+language: go
+sudo: false
+os:
+- linux
+- osx
+go:
+- "1.10"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: ZRGQODuuXEUlL+QjLU2D+SWRa1EC/XSZWmGPSx5OQj97paudXLMBP+MzGmxpkk1Rn4luMP9V1MfzlcunhMSWUdazfDhuQm6tIuIzNl5xJjn00dKaBPIPxQhxX7i5HA8RQsTTYaiRnG0MyOjEIRnzFzjRN+N/Etbz6BMbGXgT8vfkkOfgGY83lvZMmGaSR8tJ+C9UW5EmtBkgSPsH1m1/x3TJpX+Kogi3ta9/3g6AHC5JmpLQn3WjXwWD5pkkayCuixAZw7P7uDM3sPsq/AxTSya0G2inyCeNwh1bRdvTIguzPm4/Y13B/0otrRX1V+fqgjD/BWCkouLVWUTh3oLTmJIBbY+FgBVBUYcl1jU6jEC4r68I19kXslfLx6idO4rfN/GmqqcDqY/WZzqrKJSj2OCTpJ/TOKRs0nqXJsON9/GvBAMAtsRpKLmoQiZS/RpY//J5QvwELjlpSMJTpvgMLXlP5Ig3xIhKl3hGsWlV6PRtPmW9+J5zhIk+MTW418xKGSysvxI+SL/nFfefwE57JSFEqfQ9yOUojHOjLSbaSlmAq0Hegc1fPtRqp3jvbRXQyhBWHguuhFl4BZiEqKARAnssieuk9DOqljh4Aq2zeCpxugKFbVvjc26dMzo8++FbKjicZy13tuPs/mV0xyikPg9cGqP4+Md0QvpibXMMw2M=
+  file: "terrapin-$(uname -s)-$(uname -m)"
+  on:
+    repo: jimsheldon/terrapin
