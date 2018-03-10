@@ -13,3 +13,6 @@ deploy:
   file: "terrapin-$(uname -s)-$(uname -m)"
   on:
     repo: jimsheldon/terrapin
+  skip_cleanup: true
+  on:
+    tags: true
