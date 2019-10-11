@@ -1,3 +1,5 @@
+[![Build Status](https://cloud.drone.io/api/badges/jimsheldon/terrapin/status.svg)](https://cloud.drone.io/jimsheldon/terrapin)
+
 # Terrapin
 
 Terrapin is a command line tool that will install a specific version of [Terraform](https://www.terraform.io) to a desired directory.
@@ -7,69 +9,58 @@ Use terrapin in your continuous integration process to ensure the right terrafor
 ## Usage
 
 ```
-$ terrapin
-  -directory string
-        Optional: destination directory (by default the current directory is used).
-  -force
-        Optional: overwrite terraform binary if found (default is false).
-  -tf-version string
-        terraform version to use.
+$ terrapin -h
+NAME:
+   terrapin - install a specific version of Terraform to a desired directory
+
+USAGE:
+   terrapin [global options] command [command options] [arguments...]
+
+VERSION:
+   undefined
+
+COMMANDS:
+   install  install Terraform binary
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h           show help
+   --print-version, -V  print only the version
 ```
 
 ## Examples
 
 Download terraform 0.11.3 to the current directory:
-```
-$ terrapin -tf-version 0.11.3
-terrapin: configuration:
-terrapin:     -directory     = /Users/jsheldon/go/src/github.com/jimsheldon/terrapin
-terrapin:     -force         = false
-terrapin:     -tf-version    = 0.11.3
-terrapin: downloading file https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_darwin_amd64.zip
-terrapin: unzipped: /Users/jsheldon/go/src/github.com/jimsheldon/terrapin/terraform
-terrapin: terraform 0.11.3 is available at /Users/jsheldon/go/src/github.com/jimsheldon/terrapin/terraform
+```console
+$ terrapin install --version 0.11.3
+downloading file https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_darwin_amd64.zip
+unzipped: /Users/janedoe/project/terraform
 ```
 
 Download terraform 0.11.3 to a different directory:
-```
-$ terrapin -tf-version 0.11.3 -directory ~/bin
-terrapin: configuration:
-terrapin:     -directory     = /Users/jsheldon/bin
-terrapin:     -force         = false
-terrapin:     -tf-version    = 0.11.3
-terrapin: downloading file https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_darwin_amd64.zip
-terrapin: unzipped: /Users/jsheldon/bin/terraform
-terrapin: terraform 0.11.3 is available at /Users/jsheldon/bin/terraform
+```console
+$ terrapin install --version 0.11.3 --directory ~/bin
+downloading file https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_darwin_amd64.zip
+unzipped: /Users/janedoe/bin/terraform
+terraform 0.11.3 is available at /Users/janedoe/bin/terraform
 ```
 
 Running the same command again, the specified terraform binary is found and no download is needed:
-```
-$ terrapin -tf-version 0.11.3 -directory ~/bin
-terrapin: configuration:
-terrapin:     -directory     = /Users/jsheldon/bin
-terrapin:     -force         = false
-terrapin:     -tf-version    = 0.11.3
-terrapin: terraform 0.11.3 is available at /Users/jsheldon/bin/terraform
+```console
+$ terrapin install --version 0.11.3 --directory ~/bin
+terraform 0.11.3 is available at /Users/janedoe/bin/terraform
 ```
 
 By default, if terrapin finds a different version of terraform in the specified directory, it will fail:
-```
-$ terrapin -tf-version 0.11.2 -directory ~/bin
-terrapin: configuration:
-terrapin:     -directory     = /Users/jsheldon/bin
-terrapin:     -force         = false
-terrapin:     -tf-version    = 0.11.2
-terrapin: wrong terraform version found at /Users/jsheldon/bin/terraform, pass the -force flag to overwrite it
+```console
+$ terrapin install --version 0.11.4 --directory ~/bin
+wrong terraform version found at /Users/janedoe/bin/terraform, pass the --force flag to overwrite it
 ```
 
-Pass the `-force` flag to overwrite the terraform binary:
+Pass the `--force` flag to overwrite the terraform binary:
 ```
-$ terrapin -tf-version 0.11.2 -directory ~/bin -force
-terrapin: configuration:
-terrapin:     -directory     = /Users/jsheldon/bin
-terrapin:     -force         = true
-terrapin:     -tf-version    = 0.11.2
-terrapin: downloading file https://releases.hashicorp.com/terraform/0.11.2/terraform_0.11.2_darwin_amd64.zip
-terrapin: unzipped: /Users/jsheldon/bin/terraform
-terrapin: terraform 0.11.2 is available at /Users/jsheldon/bin/terraform
+$ terrapin install --version 0.11.4 --directory ~/bin --force
+downloading file https://releases.hashicorp.com/terraform/0.11.4/terraform_0.11.4_darwin_amd64.zip
+unzipped: /Users/janedoe/bin/terraform
+terraform 0.11.4 is available at /Users/janedoe/bin/terraform
 ```
