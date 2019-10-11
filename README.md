@@ -9,7 +9,7 @@ Use terrapin in your continuous integration process to ensure the right terrafor
 ## Usage
 
 ```
-$ terrapin -h
+$ terrapin --help
 NAME:
    terrapin - install a specific version of Terraform to a desired directory
 
@@ -17,7 +17,7 @@ USAGE:
    terrapin [global options] command [command options] [arguments...]
 
 VERSION:
-   undefined
+   0.1.0
 
 COMMANDS:
    install  install Terraform binary
