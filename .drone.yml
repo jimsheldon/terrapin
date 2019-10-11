@@ -1,0 +1,21 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: golang:1.12
+  commands:
+  - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o release/darwin/amd64/drone
+  - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o release/linux/amd64/terrapin
+  when:
+    event:
+    - push
+    - pull_request
+
+trigger:
+  ref:
+    include:
+    - refs/heads/master
+    - refs/pull/**
+    - refs/tags/**
