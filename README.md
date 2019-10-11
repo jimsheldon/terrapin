@@ -58,7 +58,7 @@ wrong terraform version found at /Users/janedoe/bin/terraform, pass the --force 
 ```
 
 Pass the `--force` flag to overwrite the terraform binary:
-```
+```console
 $ terrapin install --version 0.11.4 --directory ~/bin --force
 downloading file https://releases.hashicorp.com/terraform/0.11.4/terraform_0.11.4_darwin_amd64.zip
 unzipped: /Users/janedoe/bin/terraform
