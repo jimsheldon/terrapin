@@ -6,12 +6,34 @@ steps:
 - name: build
   image: golang:1.12
   commands:
-  - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o release/darwin/amd64/drone
-  - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o release/linux/amd64/terrapin
+  - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${DRONE_TAG##v}" -o release/darwin/amd64/terrapin
+  - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${DRONE_TAG##v}" -o release/linux/amd64/terrapin
   when:
     event:
     - push
     - pull_request
+
+- name: artifacts
+  image: golang:1.12
+  commands:
+  - tar -cvzf release/terrapin_darwin_amd64.tar.gz -C release/darwin/amd64 terrapin
+  - tar -cvzf release/terrapin_linux_amd64.tar.gz -C release/linux/amd64 terrapin
+  - sha256sum release/*.tar.gz > release/terrapin_checksums.txt
+  when:
+    event:
+    - push
+    - tag
+
+- name: release
+  image: plugins/github-release
+  settings:
+    files:
+      - release/terrapin_*.tar.gz
+      - release/terrapin_checksums.txt
+    api_key:
+      from_secret: github_token
+  when:
+    event: tag
 
 trigger:
   ref:
