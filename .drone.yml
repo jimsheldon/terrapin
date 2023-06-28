@@ -8,6 +8,7 @@ steps:
   commands:
   - CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${DRONE_TAG##v}" -o release/darwin/amd64/terrapin
   - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${DRONE_TAG##v}" -o release/linux/amd64/terrapin
+  - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-X main.version=${DRONE_TAG##v}" -o release/linux/arm64/terrapin
   when:
     event:
     - push
@@ -19,6 +20,7 @@ steps:
   commands:
   - tar -cvzf release/terrapin_darwin_amd64.tar.gz -C release/darwin/amd64 terrapin
   - tar -cvzf release/terrapin_linux_amd64.tar.gz -C release/linux/amd64 terrapin
+  - tar -cvzf release/terrapin_linux_arm64.tar.gz -C release/linux/arm64 terrapin
   - sha256sum release/*.tar.gz > release/terrapin_checksums.txt
   when:
     event:
