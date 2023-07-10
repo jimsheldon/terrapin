@@ -50,7 +50,7 @@ jobs:
             gh release create $CIRCLE_TAG --generate-notes
             gh release upload $CIRCLE_TAG ~/repo/release/*.tar.gz ~/repo/release/terrapin_checksums.txt
 workflows:
-  sample:
+  build_and_release:
     jobs:
       - build
       - release:
@@ -58,9 +58,9 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              ignore:
-                - /.*/
+#            branches:
+#              ignore:
+#                - /.*/
             tags:
               only:
                 - /v.[0-9\.]+/        
