@@ -1,0 +1,66 @@
+version: 2.1
+orbs:
+  gh: circleci/github-cli@2.0
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/go:1.19.10
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: go mod download
+      - run:
+          name: Build
+          command: |
+            CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/darwin/amd64/terrapin
+            CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/darwin/arm64/terrapin
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/linux/amd64/terrapin
+            CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/linux/arm64/terrapin
+      - run:
+          name: Artifacts
+          command: |
+            tar -cvzf release/terrapin_darwin_amd64.tar.gz -C release/darwin/amd64 terrapin
+            tar -cvzf release/terrapin_darwin_arm64.tar.gz -C release/darwin/arm64 terrapin
+            tar -cvzf release/terrapin_linux_amd64.tar.gz -C release/linux/amd64 terrapin
+            tar -cvzf release/terrapin_linux_arm64.tar.gz -C release/linux/arm64 terrapin
+            sha256sum release/*.tar.gz > release/terrapin_checksums.txt
+      - persist_to_workspace:
+          root: release
+          paths:
+            - "darwin"
+            - "linux"
+  release:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/go:1.19.10
+    steps:
+      - attach_workspace:
+          at: ~/repo/release
+      - run:
+          name: Inspect
+          command: |
+            ls ~/repo
+            ls -l ~/repo/release
+      - gh/setup
+      - run:
+          name: Publish
+          command: |
+            gh release create $CIRCLE_TAG --generate-notes
+            gh release upload $CIRCLE_TAG ~/repo/release/*.tar.gz ~/repo/release/terrapin_checksums.txt
+workflows:
+  sample:
+    jobs:
+      - build
+      - release:
+          context: GITHUB_TERRAPIN
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+/        
