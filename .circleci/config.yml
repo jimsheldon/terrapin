@@ -21,17 +21,21 @@ jobs:
       - run:
           name: Install Dependencies
           command: go mod download
+      - run:
+          name: Build
+          command: |
+            CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/darwin/amd64/terrapin
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${CIRCLE_TAG##v}" -o release/linux/amd64/terrapin
+      - run:
+          name: Artifacts
+          command: |
+            tar -cvzf release/terrapin_darwin_amd64.tar.gz -C release/darwin/amd64 terrapin
+            tar -cvzf release/terrapin_linux_amd64.tar.gz -C release/linux/amd64 terrapin
+            sha256sum release/*.tar.gz > release/terrapin_checksums.txt
       - save_cache:
           key: go-mod-v4-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
-      - run:
-          name: Run tests
-          command: |
-            mkdir -p /tmp/test-reports
-            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
-      - store_test_results:
-          path: /tmp/test-reports
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
